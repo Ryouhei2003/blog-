@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Post;
 
-use Illminate\Http\Request;
-use App\Http\Requests\PostRequest; // useする
+use App\Models\Post;
+use Illuminate\Http\Request;
+use App\Http\Requests\PostRequest;
 
 class PostController extends Controller
 {
@@ -23,10 +23,29 @@ class PostController extends Controller
         return view('posts.create');
     }
 
-    public function store(Post $post, PostRequest $request) // 引数をRequestからPostRequestにする
+    public function store(Post $post, PostRequest $request)
     {
         $input = $request['post'];
         $post->fill($input)->save();
         return redirect('/posts/' . $post->id);
+    }
+
+    public function edit(Post $post) // 引数を Post モデルに変更
+    {
+        return view('posts.edit')->with(['post' => $post]);
+    }
+
+    public function update(Request $request, Post $post)
+    {
+        $post->title = $request->title;
+        $post->body = $request->body;
+        $post->save();
+        return redirect("/posts/{$post->id}");
+    }
+
+    public function destroy(Post $post) // 引数を Post モデルに変更
+    {
+        $post->delete();
+        return redirect('/posts')->with('success', '投稿が削除されました。');
     }
 }
