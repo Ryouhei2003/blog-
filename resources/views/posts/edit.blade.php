@@ -1,14 +1,39 @@
-<!-- resources/views/posts/edit.blade.php -->
-<form action="/posts/{{ $post->id }}" method="POST">
-    @csrf
-    @method('PUT')
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ブログ投稿編集</title>
+</head>
+<body>
+    <h1>編集画面</h1>
+    <form action="/posts/{{ $post->id }}" method="POST">
+        @csrf
+        @method('PUT')
 
-    <label for="title">タイトル</label>
-    <input type="text" name="title" value="{{ old('title', $post->title) }}" required>
+        <!-- タイトル入力 -->
+        <div class="content__title">
+            <h2>タイトル</h2>
+            <input type="text" name="post[title]" value="{{ $post->title }}">
+            @error('post.title')
+                <p>{{ $message }}</p>
+            @enderror
+        </div>
 
-    <label for="body">本文</label>
-    <textarea name="body" required>{{ old('body', $post->body) }}</textarea>
+        <!-- 本文入力 -->
+        <div class="content__body">
+            <h2>本文</h2>
+            <textarea name="post[body]">{{ old('post.body', $post->body) }}</textarea>
+            @error('post.body')
+                <p>{{ $message }}</p>
+            @enderror
+        </div>
 
-    <button type="submit">保存</button>
-    <a href="{{ url('/') }}">戻る</a>
-</form>
+        <!-- 保存ボタン -->
+        <input type="submit" value="保存">
+    </form>
+
+    <!-- 戻るリンク -->
+    <a href="{{ url('/posts') }}">一覧へ戻る</a>
+</body>
+</html>

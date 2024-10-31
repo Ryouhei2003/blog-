@@ -15,7 +15,7 @@
     </script>
 </head>
 <body>
-    <h1>Blog Name</h1>
+    <h1>編集画面</h1>
     <a href='/posts/create'>create</a>
     <div class='posts'>
         @foreach ($posts as $post)
