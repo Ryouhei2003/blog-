@@ -3,48 +3,57 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 
 class PostController extends Controller
 {
-    public function index(Post $post)
+    public function index()
     {
-        return view('posts.index')->with(['posts' => $post->getPaginateByLimit()]);
+        $posts = Post::with('category')->paginate(10); // 投稿をカテゴリと共に取得
+        return view('posts.index', compact('posts'));
     }
 
     public function show(Post $post)
     {
-        return view('posts.show')->with(['post' => $post]);
+        return view('posts.show', compact('post'));
     }
 
     public function create()
     {
-        return view('posts.create');
-    }
-     public function store(Post $post, PostRequest $request)
-    {
-        $input = $request['post'];
-        $post->fill($input)->save();
-        return redirect('/posts/' . $post->id);
+        $categories = Category::all();
+        if ($categories->isEmpty()) {
+            return redirect()->route('posts.index')->with('warning', 'カテゴリを追加してください。');
+        }
+        return view('posts.create', compact('categories'));
     }
 
-    public function edit(Post $post) // 引数を Post モデルに変更
+    public function store(PostRequest $request)
     {
-        return view('posts.edit')->with(['post' => $post]);
+        $input = $request->input('post'); // フォームデータを取得
+        $input['user_id'] = $request->user()->id; // 現在のユーザーIDを設定
+        Post::create($input); // データを保存
+        return redirect()->route('posts.index')->with('success', '投稿を作成しました！');
+    }
+
+    public function edit(Post $post)
+    {
+        $categories = Category::all();
+        return view('posts.edit', compact('post', 'categories'));
     }
 
     public function update(PostRequest $request, Post $post)
     {
-        $input_post = $request['post'];
-        $post->fill($input_post)->save();
-    
-        return redirect('/posts/' . $post->id);
+        $input = $request->input('post'); // フォームデータを取得
+        $input['user_id'] = $request->user()->id; // ユーザーIDを再設定
+        $post->update($input); // データを更新
+        return redirect()->route('posts.index')->with('success', '投稿を更新しました！');
     }
 
-    public function destroy(Post $post) // 引数を Post モデルに変更
+    public function destroy(Post $post)
     {
-        $post->delete();
-        return redirect('/posts')->with('success', '投稿が削除されました。');
+        $post->delete(); // データを削除
+        return redirect()->route('posts.index')->with('success', '投稿を削除しました！');
     }
 }
