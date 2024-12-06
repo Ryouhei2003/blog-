@@ -4,7 +4,13 @@
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
-
+        @if (session('error'))
+            <script>
+                window.onload = function() {
+                    alert('{{ session('error') }}');
+                }
+            </script>
+        @endif
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />

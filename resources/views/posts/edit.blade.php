@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-         （edit）
+         編集
     </x-slot>
     <h1>編集画面</h1>
     <form action="/posts/{{ $post->id }}" method="POST">

@@ -9,6 +9,7 @@ use App\Http\Requests\PostRequest;
 
 class PostController extends Controller
 {
+
     public function index()
     {
         $posts = Post::with('category')->paginate(10); // 投稿をカテゴリと共に取得
@@ -31,9 +32,18 @@ class PostController extends Controller
 
     public function store(PostRequest $request)
     {
-        $input = $request->input('post'); // フォームデータを取得
-        $input['user_id'] = $request->user()->id; // 現在のユーザーIDを設定
-        Post::create($input); // データを保存
+        // ユーザーが認証されているか確認
+        if (!$request->user()) {
+            return redirect()->route('login')->with('error', 'ログインが必要です。');
+        }
+
+        // フォームデータを取得し、現在のユーザーIDを設定
+        $input = $request->input('post');
+        $input['user_id'] = $request->user()->id;
+
+        // データを保存
+        Post::create($input);
+
         return redirect()->route('posts.index')->with('success', '投稿を作成しました！');
     }
 
@@ -45,9 +55,14 @@ class PostController extends Controller
 
     public function update(PostRequest $request, Post $post)
     {
-        $input = $request->input('post'); // フォームデータを取得
+        if (!$request->user()) {
+            return redirect()->route('login')->with(['error' => 'ログインが必要です。']);
+        }
+
+        $input = $request->input('post');
         $input['user_id'] = $request->user()->id; // ユーザーIDを再設定
-        $post->update($input); // データを更新
+        $post->update($input);
+
         return redirect()->route('posts.index')->with('success', '投稿を更新しました！');
     }
 

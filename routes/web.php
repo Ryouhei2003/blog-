@@ -3,11 +3,12 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\likeController;
 
 // Welcome ビューへのルート
 Route::get('/welcome', function () {
     return view('welcome');
-})->name('welcome');
+})->name('welcome'); 
 
 // ダッシュボードビュー
 Route::get('/dashboard', function () {
@@ -31,6 +32,8 @@ Route::get('/', function () {
 
 // 投稿一覧 (posts.index)
 Route::get('/index', [PostController::class, 'index'])->name('index');
+//jsのfetchメソッドで'/post/like'としているため、ルーティングも以下のように'/post/like'とします。
+Route::post('/post/like', [LikeController::class, 'likePost']);
 
 // 認証関連のルート
 require __DIR__.'/auth.php';
