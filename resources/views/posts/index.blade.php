@@ -12,6 +12,13 @@
         <h1 class="text-3xl font-bold animate-fade-in text-center mt-10">
             フェードインアニメーション 🎉
         </h1>
+        <div>
+            <form action="{{ route('posts.index') }}" method="GET">
+                @csrf
+                <input type="text" name="keyword" value="{{ $keyword }}">
+                <input type="submit" value="検索">
+            </form>
+        </div>
 
         <a href='/posts/create'>
             <button type="button" 
@@ -64,6 +71,8 @@
                         <span class="text-gray-500">未分類</span>
                     @endif
                 </p>
+                <P class="text-indigo-700">{{ $post->created_at}}</P>
+                <P class="text-orange-600">{{$post->user->name}}</P>
                 <p class="body mt-2 text-gray-700">{{ $post->body }}</p>
 
                 <form action="/posts/{{ $post->id }}" id="form_{{ $post->id }}" method="post" class="inline">
