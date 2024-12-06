@@ -16,8 +16,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://kit.fontawesome.com/b8844e3ad4.js" crossorigin="anonymous"></script>
 </head>
-<body class="font-sans antialiased bg-green-50">
-    <div class="min-h-screen bg-green-50">
+<body class="font-sans antialiased ">
+    <div class="min-h-screen bg-gradient-to-b from-green-200 via-green-100 to-green-50">
         @include('layouts.navigation')
 
         <!-- Page Heading -->

@@ -10,10 +10,19 @@ use App\Http\Requests\PostRequest;
 class PostController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with('category')->paginate(10); // 投稿をカテゴリと共に取得
-        return view('posts.index', compact('posts'));
+        $keyword = $request->input('keyword');
+
+        $query = Post::query();
+
+        if(!empty($keyword)) {
+            $query->where('title', 'LIKE', "%{$keyword}%");
+        }
+
+        $posts = $query->with('category','user')->paginate(10);
+
+        return view('posts.index', compact('posts','keyword'));
     }
 
     public function show(Post $post)

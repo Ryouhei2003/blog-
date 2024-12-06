@@ -36,14 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     setInterval(createStar, 300); // 300msごとに星を生成
-    /* タイトルをフェードインさせる */
-.title {
-    @apply animate-fade-in;
-}
-
-/* ボタンをホバーでアニメーション */
-button:hover {
-    @apply animate-button-hover;
-}
+    
 
 });
