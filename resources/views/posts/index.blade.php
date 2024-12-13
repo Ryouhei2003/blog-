@@ -4,28 +4,24 @@
     </header>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-yellow-50 leading-tight animate-fade-in">
-            Index
+            　　　　　　　　　　　　　　　　　　　　　　　　　　　　日常投稿ブログ
         </h2>
     </x-slot>
-
-    <div class="container mx-auto px-4">
-        <h1 class="text-3xl font-bold animate-fade-in text-center mt-10">
-            フェードインアニメーション 🎉
-        </h1>
-        <div>
-            <form action="{{ route('posts.index') }}" method="GET">
-                @csrf
-                <input type="text" name="keyword" value="{{ $keyword }}">
-                <input type="submit" value="検索">
-            </form>
-        </div>
-
+@auth
+    <div class="flex justify-center items-center mt-4">
         <a href='/posts/create'>
-            <button type="button" 
-                class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+        <button type="button" 
+        class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                 作成
             </button>
         </a>
+    </div>
+    @endauth
+    @guest
+    <div class="flex justify-center items-center mt-4">
+       <P class = "text-red-600">新規作成をするためにログインしてください</P>
+    </div>
+    @endguest
         <style>
 @keyframes flame-flicker {
     0%, 100% { transform: scale(1); }
@@ -35,6 +31,20 @@
     animation: flame-flicker 1s infinite alternate ease-in-out;
 }
 </style>
+<div class="container mx-auto px-4">
+    <h1 class="text-3xl font-bold animate-fade-in text-center mt-10"></h1>
+    <div>
+    <form action="{{ route('posts.index') }}" method="GET">
+    
+    @csrf
+    <div class="flex justify-center items-center mt-4">
+        <input type="text" name="keyword" value="{{ $keyword }}">
+        <input type="submit" value="検索" class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+    </div>
+</form>
+
+
+
 
 
 <style>
@@ -47,10 +57,14 @@
     top: 10%;
     animation: move-star 5s linear infinite;
 }
+.star img { 
+    width: 50px; /* 幅を指定 */
+    height: auto; /* アスペクト比を保つ */ 
+}
 </style>
 
 <div class="star">
-    <img src="/images/star.png" alt="星" />
+    <img src="/img/star.png" >
 </div>
 
 
@@ -62,19 +76,11 @@
                         {{ $post->title }}
                     </a>
                 </h2>
-                <p class="mt-2">カテゴリ: 
-                    @if ($post->category)
-                        <a href="/categories/{{ $post->category->id }}" class="text-blue-500 hover:underline">
-                            {{ $post->category->name }}
-                        </a>
-                    @else
-                        <span class="text-gray-500">未分類</span>
-                    @endif
-                </p>
+                
                 <P class="text-indigo-700">{{ $post->created_at}}</P>
                 <P class="text-orange-600">{{$post->user->name}}</P>
                 <p class="body mt-2 text-gray-700">{{ $post->body }}</p>
-
+                @auth
                 <form action="/posts/{{ $post->id }}" id="form_{{ $post->id }}" method="post" class="inline">
                     @csrf
                     @method('DELETE')
@@ -84,27 +90,25 @@
                         削除
                     </button>
                 </form>
+                @endauth
             </div>
         @endforeach
         <div class="camp bound">
             <img src="/img/camp.png" class="absolute right-0 bottom-0 w-32 h-32 animate-bounce">
     </div>
-    </div>
-</x-app-layout>
-
-    <!-- テントのバウンドアニメーション -->
-    <div class="relative w-16 h-16 bg-green-500 animate-tent-bounce">
+     <!-- テントのバウンドアニメーション -->
+     <div class="relative w-16 h-16 bg-green-500 animate-tent-bounce">
         <!-- テントの屋根 -->
         <div class="absolute bottom-0 left-0 w-0 h-0 border-l-[32px] border-r-[32px] border-b-[32px] border-l-transparent border-r-transparent border-b-green-700"></div>
     </div>
+    </div>
+
 
     <!-- テキスト -->
     <h2 class="text-white text-2xl mt-10">キャンプを楽しみましょう</h2>
 </div>
+</x-app-layout>
 
-<div class="bg-blue-500 text-white p-4 text-center">
-    Tailwindが動いています！
-</div>
 
 
 <script>

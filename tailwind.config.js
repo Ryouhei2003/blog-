@@ -18,6 +18,11 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                orange: {
+                    500: '#FFA500',
+                },
+            },
             animation: {
                 'bg-pan': 'bgPan 10s infinite linear',
                 'fade-in': 'fadeIn 1.5s ease-out',
@@ -27,6 +32,7 @@ export default {
                 'wind-flow': 'wind-flow 10s linear infinite',
                 'tent-bounce': 'tent-bounce 1.5s ease-in-out infinite',
                 'button-hover': 'buttonHover 0.3s ease-in-out',
+                'pulse-orange': 'pulseOrange 0.5s ease-in-out',
             },
             keyframes: {
                 bgPan: {
@@ -61,6 +67,11 @@ export default {
                     '0%': { transform: 'scale(1)' },
                     '50%': { transform: 'scale(1.1)' },
                     '100%': { transform: 'scale(1)' },
+                },
+                pulseOrange: {
+                    '0%': { color: 'gray' },
+                    '50%': { color: '#FFA500' },
+                    '100%': { color: '#FFA500' },
                 },
             },
         },
