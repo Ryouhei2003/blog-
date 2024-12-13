@@ -28,7 +28,7 @@
                     name="post[title]" 
                     placeholder="タイトル" 
                     value="{{ old('post.title') }}" 
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    class="mt-1 block w-full rounded-md border-blue-500 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
                 @error('post.title')
                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
@@ -42,29 +42,15 @@
                     id="body" 
                     name="post[body]" 
                     placeholder="今日も1日お疲れさまでした。" 
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    class="mt-1 block w-full rounded-md border-blue-500 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >{{ old('post.body') }}</textarea>
+               
                 @error('post.body')
                     <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- カテゴリ選択 -->
-            <div>
-                <label for="category_id" class="block text-sm font-medium text-gray-700">カテゴリ</label>
-                <select 
-                    id="category_id" 
-                    name="post[category_id]" 
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                >
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @endforeach
-                </select>
-                @error('post.category_id')
-                    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                @enderror
-            </div>
+            
 
             <!-- ボタン -->
             <div class="flex space-x-4">

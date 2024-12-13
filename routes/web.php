@@ -11,9 +11,9 @@ Route::get('/welcome', function () {
 })->name('welcome'); 
 
 // ダッシュボードビュー
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', 
+[PostController::class, 'index']
+)->middleware(['auth', 'verified'])->name('dashboard');
 
 // プロフィール関連ルート
 Route::middleware('auth')->group(function () {
@@ -34,6 +34,12 @@ Route::get('/', function () {
 Route::get('/index', [PostController::class, 'index'])->name('index');
 //jsのfetchメソッドで'/post/like'としているため、ルーティングも以下のように'/post/like'とします。
 Route::post('/post/like', [LikeController::class, 'likePost']);
+Route::get('/post/{post}', [PostController::class, 'show']);
+
+Route::middleware('auth')->group(function () {
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+});
 
 // 認証関連のルート
 require __DIR__.'/auth.php';

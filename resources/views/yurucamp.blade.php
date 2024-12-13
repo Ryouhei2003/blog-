@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ゆるキャン△の雰囲気</title>
+    <title>ブログを楽しみましょう！！</title>
     <!-- AOSライブラリのスタイル -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
     @vite('resources/css/app.css') <!-- Tailwind CSSのスタイルを読み込む -->
@@ -23,7 +23,7 @@
             <div class="absolute top-20 left-10 w-2 h-2 bg-white rounded-full animate-stars-twinkle"></div>
             <div class="absolute top-40 left-60 w-3 h-3 bg-white rounded-full animate-stars-twinkle"></div>
             <div class="absolute top-60 left-40 w-1 h-1 bg-white rounded-full animate-stars-twinkle"></div>
-        <h2 class="text-white text-2xl mt-10">ブログを楽しみましょう</h2>
+        <h2 class="text-white text-2xl mt-10">ブログを楽しみましょう！！</h2>
     </div>
 
     <!-- スクロールアニメーション -->

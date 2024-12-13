@@ -1,18 +1,27 @@
 <x-app-layout>
     <x-slot name="header">
-        Show
+        <h1 class="text-lg font-bold text-gray-700">Show</h1>
     </x-slot>
 
-    <h1>{{ $post->title }}</h1> <!-- 投稿タイトルを表示 -->
-    
-    <p>{{ $post->body }}</p> <!-- 投稿本文を表示 -->
-    <!-- カテゴリ名を表示 -->
-    <p>カテゴリ
-            {{ $post->category->name }}
-        </a>
+   <!-- 投稿タイトルと本文 -->
+<div class="flex justify-center items-center mt-4">
+    <div class="bg-yellow-50 border-2 border-yellow-400 p-4 rounded-lg shadow-md mb-4">
+        <h1 class="text-xl font-semibold text-green-700 mb-2">{{ $post->title }}</h1>
+        <p class="text-base text-gray-800">{{ $post->body }}</p>
+    </div>
+</div>
+
+        
+
+    <!-- カテゴリ名 -->
+    <p class="text-lg text-gray-600 mb-4">
+        カテゴリ: <span class="font-semibold">{{ $post->category->name }}</span>
     </p>
- {{-- @authはログイン済ユーザーのみに閲覧できるものを中に定義できます。 --}}
- @auth
+
+    <!-- いいね機能 -->
+    <div><p>{{$post->content}}</p></div> 
+    {{-- @authはログイン済ユーザーのみに閲覧できるものを中に定義できます。 --}}
+    @auth
         {{-- 前章のPostモデルで作成したメソッドを利用し、自身がこの記事にいいねしたのか判定します。 --}}
         @if($post->isLikedByAuthUser())
             {{-- こちらがいいね済の際に表示される方で、likedクラスが付与してあることで星に色がつきます --}}
@@ -29,52 +38,50 @@
     @endauth
 
     @guest
-        <p>loginしていません</p>
+        <p class="text-red-500 text-lg">ログインしていません</p>
     @endguest
-  
-    <!-- 投稿一覧ページへのリンク -->
-    <a class="font-medium text-pink-600 dark:text-pink-500 hover:underline"
- href="{{ route('index') }}">
-        ブログ投稿一覧へ戻る
-    </a>
 
-    <!-- 編集ページへのリンク -->
-    <div class="font-medium text-purple-600 dark:text-purple-500 hover:underline">
-        <a href="/posts/{{ $post->id }}/edit">編集</a>
+    <!-- リンク -->
+    <div class="flex space-x-4 mt-4">
+        <a href="{{ route('index') }}" class="text-blue-600 text-lg hover:underline">
+            
+            <button type="button" 
+        class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+        戻る
+            </button>
+        </a>
+        @auth
+        <a href="/posts/{{ $post->id }}/edit" class="text-purple-600 text-lg hover:underline">
+        <button type="button" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+        編集 
+    </button>
+        
+        </a>
+        @endauth
     </div>
+
+    <!-- JavaScript -->
     <script>
-    //いいねボタンのhtml要素を取得します。
         const likeBtn = document.querySelector('.like-btn');
-        //いいねボタンをクリックした際の処理を記述します。 
-        likeBtn.addEventListener('click',async(e)=>{
-            //クリックされた要素を取得しています。
-            const clickedEl = e.target
-            //クリックされた要素にlikedというクラスがあれば削除し、なければ付与します。これにより星の色の切り替えができます。      
-            clickedEl.classList.toggle('liked')
-            //記事のidを取得しています。
-            const postId = e.target.id
-            //fetchメソッドを利用し、バックエンドと通信します。非同期処理のため、画面がかくついたり、真っ白になることはありません。
-            const res = await fetch('/post/like',{
-                //リクエストメソッドはPOST
+        likeBtn.addEventListener('click', async (e) => {
+            const clickedEl = e.target;
+            clickedEl.classList.toggle('liked');
+            const postId = e.target.id;
+            const res = await fetch('/post/like', {
                 method: 'POST',
                 headers: {
-                    //Content-Typeでサーバーに送るデータの種類を伝える。今回はapplication/json
                     'Content-Type': 'application/json',
-                    //csrfトークンを付与
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 },
-                //バックエンドにいいねをした記事のidを送信します。
-                body: JSON.stringify({ post_id: postId })
+                body: JSON.stringify({ post_id: postId }),
             })
-            .then((res)=>res.json())
-            .then((data)=>{
-                //記事のいいね数がバックエンドからlikesCountという変数に格納されて送信されるため、それを受け取りビューに反映します。
-                clickedEl.nextElementSibling.innerHTML = data.likesCount;
-            })
-            .catch(
-            //処理がなんらかの理由で失敗した場合に実施したい処理を記述します。
-            ()=>alert('処理が失敗しました。画面を再読み込みし、通信環境の良い場所で再度お試しください。'))
-
-        })
+                .then((res) => res.json())
+                .then((data) => {
+                    clickedEl.nextElementSibling.innerHTML = data.likesCount;
+                })
+                .catch(() =>
+                    alert('処理が失敗しました。画面を再読み込みし、通信環境の良い場所で再度お試しください。')
+                );
+        });
     </script>
 </x-app-layout>

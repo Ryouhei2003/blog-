@@ -1,48 +1,61 @@
 <x-app-layout>
     <x-slot name="header">
-         編集
+        編集
     </x-slot>
-    <h1>編集画面</h1>
-    <form action="/posts/{{ $post->id }}" method="POST">
-        @csrf
-        @method('PUT')
 
-        <!-- タイトル入力 -->
-        <div class="content__title">
-            <h2>タイトル</h2>
-            <input type="text" name="post[title]" value="{{ $post->title }}">
-            <p class="title__error" style="color:red">{{ $errors->first('post.title') }}</p>
-        </div>
+    <div class="container mx-auto px-4">
+        <h1 class="text-xl font-bold mb-4">投稿編集</h1>
+        <form action="/posts/{{ $post->id }}" method="POST">
+            @csrf
+            @method('PUT')
 
-        <!-- 本文入力 -->
-        <div class="content__body">
-            <h2>本文</h2>
-            <textarea name="post[body]">{{ old('post.body', $post->body) }}</textarea>
-            <p class="body__error" style="color:red">{{ $errors->first('post.body') }}</p>
-        </div>
-        
-        <!-- カテゴリ選択 -->
-        <div class="カテゴリ">
-            <h2>カテゴリ</h2>
-            <select name="post[category_id]">
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}">
-                        {{ $category->name }}
-                    </option>
-                @endforeach
-            </select>
-            <p class="category__error" style="color:red">{{ $errors->first('post.category_id') }}</p>
-        </div>
+            <!-- タイトル入力 -->
+            <div class="mb-4">
+                <label for="post_title" class="block text-sm font-medium text-blue-700 mb-1">タイトル</label>
+                <input
+                    type="text"
+                    id="post_title"
+                    name="post[title]"
+                    value="{{ $post->title }}"
+                    class="w-full p-2 border border-yellow-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="タイトルを入力してください"
+                >
+                @error('post.title')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <!-- 保存ボタン -->
-        <div>
-            <input type="submit" value="保存" style=<button type="button" class="text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"></button>
-        </div>
-        
-        <div class="min-h-screen bg-green-100"></div>
-    </form>
+            <!-- 本文入力 -->
+            <div class="mb-4">
+                <label for="post_body" class="block text-sm font-medium text-blue-700 mb-1">本文</label>
+                <textarea
+                    id="post_body"
+                    name="post[body]"
+                    rows="5"
+                    class="w-full p-2 border border-yellow-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="本文を入力してください">{{ old('post.body', $post->body) }}</textarea>
+                @error('post.body')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-    <!-- 戻るリンク -->
-    <a href="/">一覧へ戻る</a>
+            <!-- 保存ボタン -->
+            <div class="flex justify-center mt-4">
+                <button
+                    type="submit"
+                    class="text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                    保存
+                </button>
+            </div>
+
+            <!-- 戻るボタン -->
+            <div class="flex justify-center mt-4">
+                <a
+                    href="{{ url()->previous() }}"
+                    class="text-gray-900 bg-gradient-to-r from-lime-200 via-lime-400 to-lime-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-lime-300 dark:focus:ring-lime-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                    戻る
+                </a>
+            </div>
+        </form>
+    </div>
 </x-app-layout>
-</html>

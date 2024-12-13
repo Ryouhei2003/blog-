@@ -27,9 +27,22 @@
                 </header>
             @endisset
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+            <form action="{{ route('posts.store') }}" method="POST">
+    @csrf <!-- CSRFトークン -->
+    <input type="text" name="title" placeholder="タイトル">
+    <textarea name="body" placeholder="本文"></textarea>
+    <button type="submit">保存する</button>
+</form>
+
+
+            @error('post.title')
+    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+@enderror
+
+@error('post.body')
+    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+@enderror
+
         </div>
     </body>
 </html>

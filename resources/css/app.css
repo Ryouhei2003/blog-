@@ -1,17 +1,4 @@
+@import "./style.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* カスタムスタイルの追加例 */
-.custom-style {
-    background-color: #f0f0f0;
-}
- /* タイトルをフェードインさせる */
- .title {
-    @apply animate-fade-in;
-}
-
-/* ボタンをホバーでアニメーション */
-button:hover {
-    @apply animate-button-hover;
-}
