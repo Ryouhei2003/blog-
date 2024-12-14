@@ -19,30 +19,18 @@
             @include('layouts.navigation')
 
             <!-- Page Heading -->
-            @isset($header)
+            @if (isset($header))
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
-            @endisset
+            @endif
+
             <!-- Page Content -->
-            <form action="{{ route('posts.store') }}" method="POST">
-    @csrf <!-- CSRFトークン -->
-    <input type="text" name="title" placeholder="タイトル">
-    <textarea name="body" placeholder="本文"></textarea>
-    <button type="submit">保存する</button>
-</form>
-
-
-            @error('post.title')
-    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-@enderror
-
-@error('post.body')
-    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-@enderror
-
+            <main>
+                {{ $slot }}
+            </main>
         </div>
     </body>
 </html>

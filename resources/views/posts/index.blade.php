@@ -103,11 +103,34 @@
     </div>
     </div>
 
+    <style>
+    .visit-counter {
+        position: absolute; /* 親要素の相対位置を基準に配置 */
+        top: 150px; /* 検索ボックスの下に配置 */
+        right: 20px; /* 親要素の右端に近づける */
+        background-color: rgba(255, 255, 255, 0.8);
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-size: 14px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 1000; /* 他の要素と重ならないように */
+    }
+</style>
 
-    <!-- テキスト -->
-    <h2 class="text-white text-2xl mt-10">キャンプを楽しみましょう</h2>
+
+
+
+
+<!-- 訪問カウンタ-->
+<div class="visit-counter">
+    現在の訪問回数: {{ $visitCount }}
 </div>
+
 </x-app-layout>
+
+
+
 
 
 
