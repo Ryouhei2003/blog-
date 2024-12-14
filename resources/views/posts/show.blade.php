@@ -1,61 +1,85 @@
 <x-app-layout>
     <x-slot name="header">
-        <h1 class="text-lg font-bold text-gray-700">Show</h1>
+        <h1 class="text-lg font-bold text-gray-700">投稿詳細</h1>
     </x-slot>
 
-   <!-- 投稿タイトルと本文 -->
-<div class="flex justify-center items-center mt-4">
-    <div class="bg-yellow-50 border-2 border-yellow-400 p-4 rounded-lg shadow-md mb-4">
-        <h1 class="text-xl font-semibold text-green-700 mb-2">{{ $post->title }}</h1>
-        <p class="text-base text-gray-800">{{ $post->body }}</p>
+    <!-- 投稿タイトルと本文 -->
+    <div class="flex justify-center items-center mt-4">
+        <div class="bg-yellow-50 border-2 border-yellow-400 p-4 rounded-lg shadow-md mb-4">
+            <h1 class="text-xl font-semibold text-green-700 mb-2">{{ $post->title }}</h1>
+            <p class="text-base text-gray-800">{{ $post->body }}</p>
+            <p class="text-sm text-gray-500 mt-4">投稿者: {{ $post->user->name }}</p>
+            <p class="text-sm text-gray-500">作成日時: {{ $post->created_at->format('Y-m-d H:i') }}</p>
+        </div>
     </div>
-</div>
-
-        
-
-    <!-- カテゴリ名 -->
-    <p class="text-lg text-gray-600 mb-4">
-        カテゴリ: <span class="font-semibold">{{ $post->category->name }}</span>
-    </p>
 
     <!-- いいね機能 -->
-    <div><p>{{$post->content}}</p></div> 
-    {{-- @authはログイン済ユーザーのみに閲覧できるものを中に定義できます。 --}}
+    <div class="flexbox">
+        @auth
+            @if($post->isLikedByAuthUser())
+                <i class="fa-solid fa-star like-btn liked" id="{{ $post->id }}"></i>
+            @else
+                <i class="fa-solid fa-star like-btn" id="{{ $post->id }}"></i>
+            @endif
+            <p class="count-num">{{ $post->likes->count() }}</p>
+        @endauth
+        
+
+        <!-- リセットボタン -->
+@auth
+    <button id="reset-likes-btn" data-post-id="{{ $post->id }}" 
+        class="bg-red-500 text-white px-4 py-2 mt-4 rounded hover:bg-red-700">
+        いいねをリセット
+    </button>
+@endauth
+
+        @guest
+            <p class="text-red-500 text-lg">ログインしていません</p>
+        @endguest
+    </div>
+
+    <!-- コメント一覧 -->
+    <div class="py-12">
+    <h3 class="text-lg font-bold">コメント一覧</h3>
+    @foreach($post->comments as $comment)
+        <div class="bg-orange-100 p-4 mb-4 rounded shadow">
+            <p class="text-black">{{ $comment->body }}</p> <!-- 黒色にする -->
+            <p class="text-sm text-gray-500">投稿者: {{ $comment->user->name }} | {{ $comment->created_at->format('Y-m-d H:i') }}</p>
+        </div>
+    @endforeach
+</div>
+
+
+
+    <!-- コメント投稿フォーム -->
     @auth
-        {{-- 前章のPostモデルで作成したメソッドを利用し、自身がこの記事にいいねしたのか判定します。 --}}
-        @if($post->isLikedByAuthUser())
-            {{-- こちらがいいね済の際に表示される方で、likedクラスが付与してあることで星に色がつきます --}}
-            <div class="flexbox">
-                <i class="fa-solid fa-star like-btn liked" id={{$post->id}}></i>
-                <p class="count-num">{{$post->likes->count()}}</p>
-            </div>
-        @else
-            <div class="flexbox">
-                <i class="fa-solid fa-star like-btn" id={{$post->id}}></i>
-                <p class="count-num">{{$post->likes->count()}}</p>
-            </div>
-        @endif
+    <form action="{{ route('comments.store', $post) }}" method="POST" class="mt-6">
+    @csrf
+    <textarea name="body" rows="4" class="w-full p-2 border rounded" placeholder="コメントを入力..." required></textarea>
+    <button type="submit" class="bg-green-500 text-white px-4 py-2 mt-2 rounded hover:bg-black 600">
+    コメントを投稿する
+    </button>
     @endauth
+</form>
+
+
 
     @guest
-        <p class="text-red-500 text-lg">ログインしていません</p>
+        <p class="text-red-500 text-lg mt-6">コメントを投稿するにはログインしてください。</p>
     @endguest
 
     <!-- リンク -->
     <div class="flex space-x-4 mt-4">
-        <a href="{{ route('index') }}" class="text-blue-600 text-lg hover:underline">
-            
-            <button type="button" 
-        class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-        戻る
+        <a href="{{ route('index') }}">
+            <button type="button" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5">
+                戻る
             </button>
         </a>
         @auth
-        <a href="/posts/{{ $post->id }}/edit" class="text-purple-600 text-lg hover:underline">
-        <button type="button" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-        編集 
-    </button>
-        
+        <a href="/posts/{{ $post->id }}/edit">
+            <button type="button" class="text-white bg-gradient-to-r from-purple-500 to-purple-700 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2.5">
+                編集
+            </button>
         </a>
         @endauth
     </div>
@@ -67,7 +91,7 @@
             const clickedEl = e.target;
             clickedEl.classList.toggle('liked');
             const postId = e.target.id;
-            const res = await fetch('/post/like', {
+            await fetch('/post/like', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,13 +99,49 @@
                 },
                 body: JSON.stringify({ post_id: postId }),
             })
-                .then((res) => res.json())
-                .then((data) => {
-                    clickedEl.nextElementSibling.innerHTML = data.likesCount;
-                })
-                .catch(() =>
-                    alert('処理が失敗しました。画面を再読み込みし、通信環境の良い場所で再度お試しください。')
-                );
+            .then(res => res.json())
+            .then(data => {
+                clickedEl.nextElementSibling.innerHTML = data.likesCount;
+            })
+            .catch(() => {
+                alert('通信に失敗しました。再試行してください。');
+            });
         });
     </script>
+     <script>
+       document.addEventListener('DOMContentLoaded', () => {
+    const resetLikesBtn = document.getElementById('reset-likes-btn');
+
+    if (resetLikesBtn) {
+        resetLikesBtn.addEventListener('click', async () => {
+            const postId = resetLikesBtn.getAttribute('data-post-id');
+
+            if (!confirm('本当にいいねをリセットしますか？')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/posts/${postId}/likes/reset`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    },
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    document.querySelector('.count-num').textContent = data.likesCount;
+                    alert(data.message);
+                } else {
+                    console.error(data.error);
+                    alert('いいねのリセットに失敗しました。');
+                }
+            } catch (error) {
+                console.error('エラー:', error);
+                alert('通信エラーが発生しました。');
+            }
+        });
+    }
+});
+     </script>
 </x-app-layout>

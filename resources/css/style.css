@@ -1,17 +1,17 @@
 /* いいね押下時の星の色 */
-.liked {
-    color: orangered;
-    transition: 0.2s;
-}
-.flexbox {
-    align-items: center;
-    display: flex;
-}
-.count-num {
-    font-size: 20px;
-    margin-left: 10px;
-}
-.fa-star {
-    font-size: 30px;
+.like-btn {
+    color: orange; /* 常にオレンジ色 */
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
+.like-btn.liked {
+    color: orange; /* いいね済み状態 */
+}
+
+.like-btn:hover {
+    color: darkorange; /* ホバー時の色 */
+}

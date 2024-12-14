@@ -5,12 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PostLike extends Model
+class Visit extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'post_id',
-        'user_id',
-    ];
+    // テーブルの fillable プロパティを設定
+    protected $fillable = ['count'];
 }
