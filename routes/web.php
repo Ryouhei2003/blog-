@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\likeController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\VisitController;
 use App\Http\Controllers\CommentController;
 
